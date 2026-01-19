@@ -1,0 +1,112 @@
+
+# ============================================
+# AQUAPINE CONSULT - Azure Administrator
+# .gitignore for AZ-104 Portfolio
+# ============================================
+
+# ===== CRITICAL: NEVER COMMIT SECRETS =====
+# Azure credentials and secrets
+*.publishsettings
+*.azurePubxml
+*.env
+.env.*
+secrets/
+credentials/
+*-secret.*
+*-password.*
+*-key.*
+*-token.*
+
+# PowerShell credential files
+*.cred
+*.credential
+
+# Terraform state files (contains sensitive info)
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+.terraform.lock.hcl
+
+# ARM/Bicep parameter files with secrets
+*parameters.json
+!*parameters.template.json
+
+# ===== DEVELOPMENT TOOLS =====
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# PowerShell
+*.ps1xml
+PSReadLine/
+
+# ===== OPERATING SYSTEM FILES =====
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.directory
+
+# ===== TEMPORARY FILES =====
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+*.bak
+*.swp
+*.swo
+
+# ===== PERSONAL NOTES =====
+# Notes and scratch work
+notes/
+scratch/
+TODO.md
+PRIVATE.md
+*-personal.*
+
+# ===== AZURE-SPECIFIC =====
+# Azure Functions
+.azure/
+local.settings.json
+
+# Node modules (if using Azure Functions with Node)
+node_modules/
+
+# Python virtual environments (if using Azure with Python)
+venv/
+.venv/
+env/
+
+# ===== LARGE FILES =====
+# Screenshots with sensitive data
+*-sensitive.*
+*-credentials.*
+
+# Large media files (keep repository lean)
+*.mp4
+*.mov
+*.avi
+
+# ===== EXCEPTIONS (Files to KEEP) =====
+# Template files (these are safe)
+!*template.json
+!*example.ps1
+!*sample.*
+
+# Documentation
+!README.md
+!*.md
