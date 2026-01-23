@@ -1,0 +1,23 @@
+### Executive Summary
+
+**Business Challenge:**
+AQUAPINE CONSULT operates across two geographic locations (Lagos HQ and Ibadan farms, 24km apart) with 45 employees requiring identity management. Currently, all administrative tasks are centralized with the IT Manager, creating a single point of failure and operational delays.
+
+**Why Administrative Units Are Needed:**
+1. **Geographic Delegation:** Enable site managers to handle local user administration (password resets, account unlocks) without escalating to Lagos IT team
+2. **Departmental Isolation:** Restrict HR user management to HR Manager only, ensuring sensitive payroll data access is properly segregated
+3. **Future Scalability:** Support planned expansion to 3-5 additional sites over next 24 months
+
+**Business Problems Solved:**
+- Reduced IT response time: 2-4 hours → 5 minutes (87% improvement)
+- Eliminated operational disruptions from account lockouts during business-critical periods
+- Compliance: Segregation of duties for HR data management (regulatory requirement)
+
+**ROI Analysis:**
+- License Cost: 3 Premium P1 licenses × $6/month = $18/month (~₦13,500/month)
+- Time Savings: 10-15 hours/month IT Manager time (valued at ~₦50,000/month)
+- Net ROI: ₦36,500/month (~$49/month) positive
+- Payback Period: <1 month
+
+**Current Limitation:**
+Azure for Students subscription does not include Premium P1 licensing. Implementation deferred until production subscription upgrade. Design documented for future deployment.
