@@ -23,21 +23,18 @@
     Default temporary password for all new users. 
     Default: "AquaPine2025!" (users will be forced to change on first login)
 
-.PARAMETER WhatIf
-    Simulation mode - shows what would happen without actually creating users
-
 .EXAMPLE
-    .\homework-bulk-user-creation.ps1
+    .\aquapine-bulk-user-creation.ps1
     
     Uses default CSV path (.\aquapine-users.csv) and default password
 
 .EXAMPLE
-    .\homework-bulk-user-creation.ps1 -CsvFilePath "C:\Path\To\users.csv"
+    .\aquapine-bulk-user-creation.ps1 -CsvFilePath "C:\Path\To\users.csv"
     
     Uses custom CSV file path
 
 .EXAMPLE
-    .\homework-bulk-user-creation.ps1 -WhatIf
+    .\aquapine-bulk-user-creation.ps1 -WhatIf
     
     Simulation mode - validates CSV and shows what would be created
 
@@ -46,24 +43,18 @@
     Company: AQUAPINE CONSULT
     Purpose: AZ-104 Domain 1 - Identity & Governance Lab
     Date: January 2026
-    Version: 1.0
+    Version: 1.1 (Fixed duplicate WhatIf parameter)
     
     Prerequisites:
     - Microsoft.Graph PowerShell module installed
     - Global Administrator or User Administrator role
     - Internet connection to Microsoft Graph API
-    
-    Security Notes:
-    - Temporary passwords are generated securely
-    - Users MUST change password on first login
-    - Script requires explicit authentication
-    - All actions are logged for audit purposes
 
 .LINK
-    https://github.com/YOUR-USERNAME/AquaPine-Azure-Infrastructure
+    https://github.com/Olakay-Azure/AquaPine-Azure-Infrastructure
 #>
 
-[CmdletBinding(SupportsShouldProcess)]
+[CmdletBinding(SupportsShouldProcess=$true)]
 param(
     [Parameter(Mandatory = $false)]
     [ValidateScript({
@@ -75,19 +66,16 @@ param(
         }
         return $true
     })]
-    [string]$CsvFilePath = ".\aquapine-users.csv",
+    [string]$CsvFilePath = "..\aquapine-users.csv",
     
     [Parameter(Mandatory = $false)]
     [ValidatePattern('^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')]
-    [string]$DefaultPassword = "AquaPine2025!",
-    
-    [Parameter(Mandatory = $false)]
-    [switch]$WhatIf
+    [string]$DefaultPassword = "AquaPine2025!"
 )
 
 # Script configuration
 $ErrorActionPreference = "Continue"
-$ProgressPreference = "SilentlyContinue"  # Speeds up script execution
+$ProgressPreference = "SilentlyContinue"
 
 # Initialize counters and logging
 $script:UsersCreated = 0
@@ -98,10 +86,6 @@ $script:StartTime = Get-Date
 #region Helper Functions
 
 function Write-Log {
-    <#
-    .SYNOPSIS
-        Writes colored log messages with timestamps
-    #>
     param(
         [Parameter(Mandatory = $true)]
         [string]$Message,
@@ -123,17 +107,12 @@ function Write-Log {
 }
 
 function Test-GraphConnection {
-    <#
-    .SYNOPSIS
-        Tests if Microsoft Graph connection is active and valid
-    #>
     try {
         $context = Get-MgContext
         if ($null -eq $context) {
             return $false
         }
         
-        # Verify required scopes
         $requiredScopes = @("User.ReadWrite.All", "Directory.ReadWrite.All")
         $hasAllScopes = $true
         
@@ -152,14 +131,9 @@ function Test-GraphConnection {
 }
 
 function Connect-ToMicrosoftGraph {
-    <#
-    .SYNOPSIS
-        Connects to Microsoft Graph with required permissions
-    #>
     Write-Log "Connecting to Microsoft Graph..." -Level Info
     
     try {
-        # Check if already connected
         if (Test-GraphConnection) {
             Write-Log "Already connected to Microsoft Graph" -Level Success
             $context = Get-MgContext
@@ -168,16 +142,13 @@ function Connect-ToMicrosoftGraph {
             return $true
         }
         
-        # Required scopes for user creation
         $scopes = @(
-            "User.ReadWrite.All",      # Create and modify users
-            "Directory.ReadWrite.All"  # Set manager and other directory properties
+            "User.ReadWrite.All",
+            "Directory.ReadWrite.All"
         )
         
-        # Connect with interactive authentication
-        Connect-MgGraph -Scopes $scopes -NoWelcome
+        Connect-MgGraph -Scopes $scopes -UseDeviceCode -NoWelcome
         
-        # Verify connection
         if (Test-GraphConnection) {
             Write-Log "Successfully connected to Microsoft Graph" -Level Success
             $context = Get-MgContext
@@ -196,30 +167,23 @@ function Connect-ToMicrosoftGraph {
 }
 
 function Test-CsvFile {
-    <#
-    .SYNOPSIS
-        Validates CSV file structure and data quality
-    #>
     param([string]$Path)
     
     Write-Log "Validating CSV file: $Path" -Level Info
     
     try {
-        # Import CSV
         $csvData = Import-Csv -Path $Path
         
         if ($csvData.Count -eq 0) {
             throw "CSV file is empty"
         }
         
-        # Required columns
         $requiredColumns = @(
             "FirstName", "LastName", "DisplayName", "UserPrincipalName",
             "JobTitle", "Department", "OfficeLocation", "Manager",
             "PhoneNumber", "UsageLocation"
         )
         
-        # Check for required columns
         $csvColumns = $csvData[0].PSObject.Properties.Name
         $missingColumns = $requiredColumns | Where-Object { $_ -notin $csvColumns }
         
@@ -227,21 +191,17 @@ function Test-CsvFile {
             throw "CSV missing required columns: $($missingColumns -join ', ')"
         }
         
-        # Validate data quality
         $issues = @()
         
         foreach ($user in $csvData) {
-            # Check for empty UserPrincipalName
             if ([string]::IsNullOrWhiteSpace($user.UserPrincipalName)) {
                 $issues += "Row $($csvData.IndexOf($user) + 2): UserPrincipalName is empty"
             }
             
-            # Check email format
             if ($user.UserPrincipalName -notmatch '^[^@]+@[^@]+\.[^@]+$') {
                 $issues += "Row $($csvData.IndexOf($user) + 2): Invalid email format: $($user.UserPrincipalName)"
             }
             
-            # Check for empty required fields
             if ([string]::IsNullOrWhiteSpace($user.DisplayName)) {
                 $issues += "Row $($csvData.IndexOf($user) + 2): DisplayName is empty"
             }
@@ -267,10 +227,6 @@ function Test-CsvFile {
 }
 
 function New-AquaPineUser {
-    <#
-    .SYNOPSIS
-        Creates a single user in Microsoft Entra ID
-    #>
     param(
         [Parameter(Mandatory = $true)]
         [PSCustomObject]$UserData,
@@ -280,13 +236,11 @@ function New-AquaPineUser {
     )
     
     try {
-        # Prepare password profile
         $passwordProfile = @{
             Password                      = $Password
             ForceChangePasswordNextSignIn = $true
         }
         
-        # Prepare user parameters
         $userParams = @{
             AccountEnabled    = $true
             DisplayName       = $UserData.DisplayName
@@ -302,10 +256,9 @@ function New-AquaPineUser {
             UsageLocation     = $UserData.UsageLocation
         }
         
-        # Create user
         Write-Log "Creating user: $($UserData.DisplayName) ($($UserData.UserPrincipalName))" -Level Info
         
-        if ($WhatIf) {
+        if ($WhatIfPreference) {
             Write-Log "[WHATIF] Would create user with parameters:" -Level Warning
             $userParams | Format-List | Out-String | Write-Host -ForegroundColor Gray
             return $true
@@ -315,27 +268,19 @@ function New-AquaPineUser {
         
         Write-Log "✓ User created successfully: $($UserData.DisplayName)" -Level Success
         
-        # Set manager if specified (and not empty)
         if (-not [string]::IsNullOrWhiteSpace($UserData.Manager)) {
             try {
                 Write-Log "  └─ Setting manager: $($UserData.Manager)" -Level Info
                 
-                # Get manager user object
                 $manager = Get-MgUser -Filter "userPrincipalName eq '$($UserData.Manager)'" -ErrorAction Stop
                 
                 if ($manager) {
-                    # Set manager reference
                     $managerRef = @{
                         "@odata.id" = "https://graph.microsoft.com/v1.0/users/$($manager.Id)"
                     }
                     
-                    if (-not $WhatIf) {
-                        Set-MgUserManagerByRef -UserId $newUser.Id -BodyParameter $managerRef
-                        Write-Log "  └─ ✓ Manager set successfully" -Level Success
-                    }
-                    else {
-                        Write-Log "  └─ [WHATIF] Would set manager" -Level Warning
-                    }
+                    Set-MgUserManagerByRef -UserId $newUser.Id -BodyParameter $managerRef
+                    Write-Log "  └─ ✓ Manager set successfully" -Level Success
                 }
                 else {
                     Write-Log "  └─ ⚠ Manager not found, skipping" -Level Warning
@@ -349,7 +294,6 @@ function New-AquaPineUser {
         return $true
     }
     catch {
-        # Check for duplicate user error
         if ($_.Exception.Message -like "*already exists*") {
             Write-Log "✗ User already exists: $($UserData.UserPrincipalName)" -Level Warning
         }
@@ -365,7 +309,6 @@ function New-AquaPineUser {
 
 #region Main Script
 
-# Display script banner
 Write-Host ""
 Write-Host "================================================" -ForegroundColor Cyan
 Write-Host "  AQUAPINE CONSULT - BULK USER IMPORT          " -ForegroundColor Cyan
@@ -373,25 +316,21 @@ Write-Host "  Microsoft Entra ID User Provisioning         " -ForegroundColor Cy
 Write-Host "================================================" -ForegroundColor Cyan
 Write-Host ""
 
-# WhatIf mode notification
-if ($WhatIf) {
+if ($WhatIfPreference) {
     Write-Host "⚠️  RUNNING IN SIMULATION MODE (WhatIf)" -ForegroundColor Yellow
     Write-Host "   No actual changes will be made" -ForegroundColor Yellow
     Write-Host ""
 }
 
 try {
-    # Step 1: Validate prerequisites
     Write-Log "Step 1: Checking prerequisites..." -Level Info
     
-    # Check if Microsoft.Graph module is installed
     if (-not (Get-Module -ListAvailable -Name Microsoft.Graph)) {
         throw "Microsoft.Graph PowerShell module is not installed. Install with: Install-Module Microsoft.Graph -Scope CurrentUser"
     }
     
     Write-Log "✓ Microsoft.Graph module found" -Level Success
     
-    # Step 2: Connect to Microsoft Graph
     Write-Log "Step 2: Connecting to Microsoft Graph..." -Level Info
     
     if (-not (Connect-ToMicrosoftGraph)) {
@@ -400,15 +339,13 @@ try {
     
     Write-Host ""
     
-    # Step 3: Validate CSV file
     Write-Log "Step 3: Validating CSV file..." -Level Info
     
     $users = Test-CsvFile -Path $CsvFilePath
     
     Write-Host ""
     
-    # Step 4: Confirmation prompt
-    if (-not $WhatIf) {
+    if (-not $WhatIfPreference) {
         Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Yellow
         Write-Host "⚠️  CONFIRMATION REQUIRED" -ForegroundColor Yellow
         Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Yellow
@@ -428,7 +365,6 @@ try {
         Write-Host ""
     }
     
-    # Step 5: Create users
     Write-Log "Step 4: Creating users..." -Level Info
     Write-Host ""
     
@@ -437,7 +373,6 @@ try {
     foreach ($user in $users) {
         $progressCount++
         
-        # Progress indicator
         Write-Progress -Activity "Creating AQUAPINE users" `
                        -Status "Processing $($user.DisplayName) ($progressCount of $($users.Count))" `
                        -PercentComplete (($progressCount / $users.Count) * 100)
@@ -455,8 +390,7 @@ try {
             }
         }
         
-        # Small delay to avoid API throttling
-        if (-not $WhatIf) {
+        if (-not $WhatIfPreference) {
             Start-Sleep -Milliseconds 500
         }
     }
@@ -466,7 +400,6 @@ try {
     Write-Host ""
     Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Gray
     
-    # Step 6: Generate summary report
     Write-Host ""
     Write-Host "================================================" -ForegroundColor Cyan
     Write-Host "  BULK USER IMPORT SUMMARY                     " -ForegroundColor Cyan
@@ -491,14 +424,12 @@ try {
     
     Write-Host ""
     
-    # Display failed users if any
     if ($script:UsersFailed -gt 0) {
         Write-Host "Failed Users:" -ForegroundColor Red
         Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Red
         
         $script:FailedUsers | Format-Table -Property DisplayName, UserPrincipalName, Error -AutoSize | Out-String | Write-Host
         
-        # Export failed users to CSV
         $failedCsvPath = ".\failed-users-$(Get-Date -Format 'yyyyMMdd-HHmmss').csv"
         $script:FailedUsers | Export-Csv -Path $failedCsvPath -NoTypeInformation
         Write-Log "Failed users exported to: $failedCsvPath" -Level Warning
@@ -506,7 +437,6 @@ try {
     
     Write-Host ""
     
-    # Next steps
     Write-Host "================================================" -ForegroundColor Cyan
     Write-Host "  NEXT STEPS                                    " -ForegroundColor Cyan
     Write-Host "================================================" -ForegroundColor Cyan
@@ -522,7 +452,6 @@ try {
     Write-Host "   Users will be prompted to change password" -ForegroundColor Gray
     Write-Host ""
     
-    # Success/failure determination
     if ($script:UsersFailed -eq 0) {
         Write-Host "🎉 All users created successfully!" -ForegroundColor Green
         exit 0
@@ -549,50 +478,8 @@ catch {
     exit 1
 }
 finally {
-    # Disconnect from Microsoft Graph (optional - comment out if you want to stay connected)
+    # Optional: Disconnect from Microsoft Graph
     # Disconnect-MgGraph
 }
 
 #endregion
-
-<#
-TROUBLESHOOTING GUIDE
-=====================
-
-Common Errors and Solutions:
-
-1. "Microsoft.Graph module is not installed"
-   Solution: Install-Module Microsoft.Graph -Scope CurrentUser
-
-2. "Insufficient privileges"
-   Solution: Ensure you have User Administrator or Global Administrator role
-
-3. "User already exists"
-   Solution: Script will skip existing users - check portal for duplicates
-
-4. "CSV file not found"
-   Solution: Verify path to CSV file, use absolute path if needed
-
-5. "Failed to set manager"
-   Solution: Managers must be created BEFORE their reports
-            Run script in two passes: managers first, then reports
-
-6. "API throttling"
-   Solution: Script includes delays, but you can increase if needed
-
-VERIFICATION COMMANDS
-=====================
-
-# Check created users
-Get-MgUser -Filter "companyName eq 'AQUAPINE CONSULT'" | Format-Table DisplayName, UserPrincipalName, Department
-
-# Check specific user
-Get-MgUser -Filter "userPrincipalName eq 'olatunde.ogunti@aquapineconsult.onmicrosoft.com'"
-
-# Check user's manager
-Get-MgUserManager -UserId "olatunde.ogunti@aquapineconsult.onmicrosoft.com"
-
-# Count users by department
-Get-MgUser -All | Group-Object Department | Sort-Object Count -Descending
-
-#>
