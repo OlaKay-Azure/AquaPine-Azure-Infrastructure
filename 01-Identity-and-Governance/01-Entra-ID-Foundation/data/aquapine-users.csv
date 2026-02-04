@@ -1,0 +1,46 @@
+FirstName,LastName,DisplayName,UserPrincipalName,JobTitle,Department,OfficeLocation,Manager,PhoneNumber,UsageLocation
+Adewale,Okonkwo,Adewale Okonkwo,adewale.okonkwo@koguntioutlook.onmicrosoft.com,Chief Executive Officer,Executive Management,Lagos HQ,,-1125,NG
+Chinwe,Adekunle,Chinwe Adekunle,chinwe.adekunle@koguntioutlook.onmicrosoft.com,Chief Financial Officer,Executive Management,Lagos HQ,adewale.okonkwo@koguntioutlook.onmicrosoft.com,-1126,NG
+Emeka,Nwosu,Emeka Nwosu,emeka.nwosu@koguntioutlook.onmicrosoft.com,Operations Director,Executive Management,Lagos HQ,adewale.okonkwo@koguntioutlook.onmicrosoft.com,-1127,NG
+Folake,Adebayo,Folake Adebayo,folake.adebayo@koguntioutlook.onmicrosoft.com,Business Development Manager,Executive Management,Lagos HQ,adewale.okonkwo@koguntioutlook.onmicrosoft.com,-1128,NG
+Olatunde,Ogunti,Olatunde Ogunti,olatunde.ogunti@koguntioutlook.onmicrosoft.com,IT Manager,IT Department,Lagos HQ,adewale.okonkwo@koguntioutlook.onmicrosoft.com,-1129,NG
+Tunde,Bakare,Tunde Bakare,tunde.bakare@koguntioutlook.onmicrosoft.com,IT Support Technician,IT Department,Lagos HQ,olatunde.ogunti@koguntioutlook.onmicrosoft.com,-1130,NG
+Chioma,Okoli,Chioma Okoli,chioma.okoli@koguntioutlook.onmicrosoft.com,HR Manager,Human Resources,Lagos HQ,adewale.okonkwo@koguntioutlook.onmicrosoft.com,-1131,NG
+Ngozi,Eze,Ngozi Eze,ngozi.eze@koguntioutlook.onmicrosoft.com,HR Officer,Human Resources,Lagos HQ,chioma.okoli@koguntioutlook.onmicrosoft.com,-1132,NG
+Blessing,Okoro,Blessing Okoro,blessing.okoro@koguntioutlook.onmicrosoft.com,Payroll Administrator,Human Resources,Lagos HQ,chioma.okoli@koguntioutlook.onmicrosoft.com,-1133,NG
+Ibrahim,Musa,Ibrahim Musa,ibrahim.musa@koguntioutlook.onmicrosoft.com,Sales Manager,Sales Department,Lagos HQ,adewale.okonkwo@koguntioutlook.onmicrosoft.com,-1134,NG
+Amina,Bello,Amina Bello,amina.bello@koguntioutlook.onmicrosoft.com,Senior Sales Representative,Sales Department,Lagos HQ,ibrahim.musa@koguntioutlook.onmicrosoft.com,-1135,NG
+Oluwaseun,Adeyemi,Oluwaseun Adeyemi,oluwaseun.adeyemi@koguntioutlook.onmicrosoft.com,Sales Representative,Sales Department,Lagos HQ,ibrahim.musa@koguntioutlook.onmicrosoft.com,-1136,NG
+Funmilayo,Ajayi,Funmilayo Ajayi,funmilayo.ajayi@koguntioutlook.onmicrosoft.com,Sales Representative,Sales Department,Lagos HQ,ibrahim.musa@koguntioutlook.onmicrosoft.com,-1137,NG
+Chukwuemeka,Okafor,Chukwuemeka Okafor,chukwuemeka.okafor@koguntioutlook.onmicrosoft.com,Sales Representative,Sales Department,Lagos HQ,ibrahim.musa@koguntioutlook.onmicrosoft.com,-1138,NG
+Aisha,Abdullahi,Aisha Abdullahi,aisha.abdullahi@koguntioutlook.onmicrosoft.com,Marketing Officer,Sales Department,Lagos HQ,ibrahim.musa@koguntioutlook.onmicrosoft.com,-1139,NG
+Kehinde,Taiwo,Kehinde Taiwo,kehinde.taiwo@koguntioutlook.onmicrosoft.com,Marketing Officer,Sales Department,Lagos HQ,ibrahim.musa@koguntioutlook.onmicrosoft.com,-1140,NG
+Yetunde,Olaniyan,Yetunde Olaniyan,yetunde.olaniyan@koguntioutlook.onmicrosoft.com,Customer Service Representative,Sales Department,Lagos HQ,ibrahim.musa@koguntioutlook.onmicrosoft.com,-1141,NG
+Biodun,Akintola,Biodun Akintola,biodun.akintola@koguntioutlook.onmicrosoft.com,Logistics Manager,Logistics Department,Lagos HQ,emeka.nwosu@koguntioutlook.onmicrosoft.com,-1142,NG
+Halima,Yusuf,Halima Yusuf,halima.yusuf@koguntioutlook.onmicrosoft.com,Delivery Coordinator,Logistics Department,Lagos HQ,biodun.akintola@koguntioutlook.onmicrosoft.com,-1143,NG
+Segun,Adeleke,Segun Adeleke,segun.adeleke@koguntioutlook.onmicrosoft.com,Delivery Coordinator,Logistics Department,Lagos HQ,biodun.akintola@koguntioutlook.onmicrosoft.com,-1144,NG
+Chidinma,Nnamdi,Chidinma Nnamdi,chidinma.nnamdi@koguntioutlook.onmicrosoft.com,Delivery Coordinator,Logistics Department,Lagos HQ,biodun.akintola@koguntioutlook.onmicrosoft.com,-1145,NG
+Adebayo,Oladipo,Adebayo Oladipo,adebayo.oladipo@koguntioutlook.onmicrosoft.com,Farm Manager,Farm Operations,Bodija Farm,emeka.nwosu@koguntioutlook.onmicrosoft.com,-1146,NG
+Temitope,Olayinka,Temitope Olayinka,temitope.olayinka@koguntioutlook.onmicrosoft.com,Senior Farm Supervisor,Farm Operations,Bodija Farm,adebayo.oladipo@koguntioutlook.onmicrosoft.com,-1147,NG
+Uche,Onyeka,Uche Onyeka,uche.onyeka@koguntioutlook.onmicrosoft.com,Farm Supervisor,Farm Operations,Moniya Farm,adebayo.oladipo@koguntioutlook.onmicrosoft.com,-1148,NG
+Damilola,Bamidele,Damilola Bamidele,damilola.bamidele@koguntioutlook.onmicrosoft.com,Pond Technician,Farm Operations,Bodija Farm,adebayo.oladipo@koguntioutlook.onmicrosoft.com,-1149,NG
+Fatima,Ibrahim,Fatima Ibrahim,fatima.ibrahim@koguntioutlook.onmicrosoft.com,Pond Technician,Farm Operations,Moniya Farm,adebayo.oladipo@koguntioutlook.onmicrosoft.com,-1150,NG
+Gbemisola,Afolabi,Gbemisola Afolabi,gbemisola.afolabi@koguntioutlook.onmicrosoft.com,Pond Technician,Farm Operations,Bodija Farm,adebayo.oladipo@koguntioutlook.onmicrosoft.com,-1151,NG
+Ifeanyi,Obinna,Ifeanyi Obinna,ifeanyi.obinna@koguntioutlook.onmicrosoft.com,Microbiology Manager,Microbiology Lab,Moniya Farm,emeka.nwosu@koguntioutlook.onmicrosoft.com,-1152,NG
+Nneka,Chukwu,Nneka Chukwu,nneka.chukwu@koguntioutlook.onmicrosoft.com,Senior Microbiologist,Microbiology Lab,Moniya Farm,ifeanyi.obinna@koguntioutlook.onmicrosoft.com,-1153,NG
+Adaobi,Nwankwo,Adaobi Nwankwo,adaobi.nwankwo@koguntioutlook.onmicrosoft.com,Lab Technician,Microbiology Lab,Moniya Farm,ifeanyi.obinna@koguntioutlook.onmicrosoft.com,-1154,NG
+Chiamaka,Ike,Chiamaka Ike,chiamaka.ike@koguntioutlook.onmicrosoft.com,Lab Assistant,Microbiology Lab,Moniya Farm,ifeanyi.obinna@koguntioutlook.onmicrosoft.com,-1155,NG
+Yakubu,Garba,Yakubu Garba,yakubu.garba@koguntioutlook.onmicrosoft.com,Feed Production Supervisor,Feed Production,Moniya Farm,emeka.nwosu@koguntioutlook.onmicrosoft.com,-1156,NG
+Maryam,Aliyu,Maryam Aliyu,maryam.aliyu@koguntioutlook.onmicrosoft.com,Feed Mill Operator,Feed Production,Moniya Farm,yakubu.garba@koguntioutlook.onmicrosoft.com,-1157,NG
+Olumide,Ogunleye,Olumide Ogunleye,olumide.ogunleye@koguntioutlook.onmicrosoft.com,Feed Mill Operator,Feed Production,Moniya Farm,yakubu.garba@koguntioutlook.onmicrosoft.com,-1158,NG
+Zainab,Mohammed,Zainab Mohammed,zainab.mohammed@koguntioutlook.onmicrosoft.com,Feed Quality Control Officer,Feed Production,Moniya Farm,yakubu.garba@koguntioutlook.onmicrosoft.com,-1159,NG
+Chinedu,Okeke,Chinedu Okeke,chinedu.okeke@koguntioutlook.onmicrosoft.com,Feed Technician,Feed Production,Moniya Farm,yakubu.garba@koguntioutlook.onmicrosoft.com,-1160,NG
+Omolara,Soares,Omolara Soares,omolara.soares@koguntioutlook.onmicrosoft.com,Hatchery Supervisor,Hatchery Unit,Moniya Farm,emeka.nwosu@koguntioutlook.onmicrosoft.com,-1161,NG
+Taiwo,Owolabi,Taiwo Owolabi,taiwo.owolabi@koguntioutlook.onmicrosoft.com,Hatchery Technician,Hatchery Unit,Moniya Farm,omolara.soares@koguntioutlook.onmicrosoft.com,-1162,NG
+Precious,Udoh,Precious Udoh,precious.udoh@koguntioutlook.onmicrosoft.com,Breeding Specialist,Hatchery Unit,Moniya Farm,omolara.soares@koguntioutlook.onmicrosoft.com,-1163,NG
+Godwin,Eze,Godwin Eze,godwin.eze@koguntioutlook.onmicrosoft.com,Chief Security Officer,Farm Security,Bodija Farm,emeka.nwosu@koguntioutlook.onmicrosoft.com,-1164,NG
+Suleiman,Baba,Suleiman Baba,suleiman.baba@koguntioutlook.onmicrosoft.com,Security Officer,Farm Security,Bodija Farm,godwin.eze@koguntioutlook.onmicrosoft.com,-1165,NG
+Rasheed,Lawal,Rasheed Lawal,rasheed.lawal@koguntioutlook.onmicrosoft.com,Security Officer,Farm Security,Moniya Farm,godwin.eze@koguntioutlook.onmicrosoft.com,-1166,NG
+Amos,Adegoke,Amos Adegoke,amos.adegoke@koguntioutlook.onmicrosoft.com,Security Officer,Farm Security,Bodija Farm,godwin.eze@koguntioutlook.onmicrosoft.com,-1167,NG
+Patience,Obi,Patience Obi,patience.obi@koguntioutlook.onmicrosoft.com,Store Keeper,Store Department,Bodija Farm,biodun.akintola@koguntioutlook.onmicrosoft.com,-1168,NG
+Babatunde,Oseni,Babatunde Oseni,babatunde.oseni@koguntioutlook.onmicrosoft.com,Inventory Officer,Store Department,Moniya Farm,biodun.akintola@koguntioutlook.onmicrosoft.com,-1169,NG
