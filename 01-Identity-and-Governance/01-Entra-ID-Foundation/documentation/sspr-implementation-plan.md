@@ -144,13 +144,13 @@ param(
 )
 
 # Connect to Azure AD
-Connect-AzureAD
+Connect-AzAccount
 
 # Generate temporary password
 $TempPassword = -join ((65..90) + (97..122) + (48..57) | Get-Random -Count 12 | ForEach-Object {[char]$_})
 
 # Reset password
-Set-AzureADUserPassword -ObjectId $UserPrincipalName `
+Set-AzADUserPassword -ObjectId $UserPrincipalName `
     -Password (ConvertTo-SecureString $TempPassword -AsPlainText -Force) `
     -ForceChangePasswordNextSignIn $true
 
