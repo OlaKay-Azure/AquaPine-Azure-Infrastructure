@@ -54,6 +54,7 @@
     https://github.com/Olakay-Azure/AquaPine-Azure-Infrastructure
 #>
 
+
 [CmdletBinding(SupportsShouldProcess=$true)]
 param(
     [Parameter(Mandatory = $false)]
@@ -66,12 +67,16 @@ param(
         }
         return $true
     })]
-    [string]$CsvFilePath = "..\aquapine-users.csv",
+    [string]$CsvFilePath = "..\data\aquapine-users.csv",
     
     [Parameter(Mandatory = $false)]
-    [ValidatePattern('^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')]
-    [string]$DefaultPassword = "AquaPine2025!"
+    [SecureString]$DefaultPassword
 )
+
+# If no password provided, create default SecureString
+if ($null -eq $DefaultPassword) {
+    $DefaultPassword = ConvertTo-SecureString "AquaPine2025!" -AsPlainText -Force
+}
 
 # Script configuration
 $ErrorActionPreference = "Continue"
@@ -232,12 +237,17 @@ function New-AquaPineUser {
         [PSCustomObject]$UserData,
         
         [Parameter(Mandatory = $true)]
-        [string]$Password
+        [SecureString]$Password
     )
     
     try {
+        # Convert SecureString to plain text for API (Microsoft Graph requires plain text)
+        $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password)
+        $PlainPassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+        [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($BSTR)
+        
         $passwordProfile = @{
-            Password                      = $Password
+            Password                      = $PlainPassword
             ForceChangePasswordNextSignIn = $true
         }
         
@@ -264,10 +274,17 @@ function New-AquaPineUser {
             return $true
         }
         
-        $newUser = New-MgUser @userParams
+        # CRITICAL FIX: Actually test if the command succeeds
+        $newUser = $null
+        $newUser = New-MgUser @userParams -ErrorAction Stop
         
-        Write-Log "✓ User created successfully: $($UserData.DisplayName)" -Level Success
+        if ($null -eq $newUser) {
+            throw "User creation returned null - authentication likely failed"
+        }
         
+        Write-Log "✓ User created successfully: $($UserData.DisplayName) [ID: $($newUser.Id)]" -Level Success
+        
+        # Set manager if specified
         if (-not [string]::IsNullOrWhiteSpace($UserData.Manager)) {
             try {
                 Write-Log "  └─ Setting manager: $($UserData.Manager)" -Level Info
@@ -279,28 +296,37 @@ function New-AquaPineUser {
                         "@odata.id" = "https://graph.microsoft.com/v1.0/users/$($manager.Id)"
                     }
                     
-                    Set-MgUserManagerByRef -UserId $newUser.Id -BodyParameter $managerRef
+                    Set-MgUserManagerByRef -UserId $newUser.Id -BodyParameter $managerRef -ErrorAction Stop
                     Write-Log "  └─ ✓ Manager set successfully" -Level Success
                 }
                 else {
-                    Write-Log "  └─ ⚠ Manager not found, skipping" -Level Warning
+                    Write-Log "  └─ ⚠ Manager not found: $($UserData.Manager)" -Level Warning
                 }
             }
             catch {
-                Write-Log "  └─ ⚠ Failed to set manager: $_" -Level Warning
+                Write-Log "  └─ ⚠ Failed to set manager: $($_.Exception.Message)" -Level Warning
             }
         }
         
         return $true
     }
     catch {
-        if ($_.Exception.Message -like "*already exists*") {
+        # CRITICAL FIX: Properly detect authentication errors
+        $errorMessage = $_.Exception.Message
+        
+        if ($errorMessage -like "*Authentication*" -or $errorMessage -like "*Unauthorized*" -or $errorMessage -like "*401*") {
+            Write-Log "✗ AUTHENTICATION ERROR: Cannot create user - not connected to Microsoft Graph" -Level Error
+            Write-Log "  Run Connect-MgGraph with proper scopes first!" -Level Error
+        }
+        elseif ($errorMessage -like "*already exists*") {
             Write-Log "✗ User already exists: $($UserData.UserPrincipalName)" -Level Warning
         }
         else {
-            Write-Log "✗ Failed to create user: $($UserData.DisplayName) - $_" -Level Error
+            Write-Log "✗ Failed to create user: $($UserData.DisplayName)" -Level Error
+            Write-Log "  Error: $errorMessage" -Level Error
         }
         
+        # CRITICAL FIX: Don't return true on error!
         throw
     }
 }
