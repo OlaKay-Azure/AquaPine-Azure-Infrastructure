@@ -17,6 +17,49 @@ credentials/
 *-key.*
 *-token.*
 
+# Azure Credentials (CRITICAL - NEVER COMMIT)
+*credentials*.txt
+*credentials*.xml
+*secret*.txt
+*secret*.xml
+*.pfx
+*.p12
+*-sp-*.json
+
+# Environment files
+.env
+.env.local
+
+# PowerShell secure strings
+*.clixml
+
+# Temporary files
+*-TEMP.*
+temp/
+tmp/
+
+# Azure CLI cache
+.azure/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build outputs
+bin/
+obj/
+*.log
+
+# Certificate files
+*.cer
+*.crt
+*.pem
+
 # PowerShell credential files
 *.cred
 *.credential
