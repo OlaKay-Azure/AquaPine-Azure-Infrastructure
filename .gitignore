@@ -153,3 +153,15 @@ env/
 # Documentation
 !README.md
 !*.md
+
+# Local-only AquaPine scripts
+scripts/test-graphsp.ps1
+scripts/aquapine-password-reset-all.ps1
+scripts/check-app-id.ps1
+scripts/mggraph-diagnostic.ps1
+scripts/reset-all-user-password.ps1
+scripts/run-fix.ps1
+scripts/verify-user-logins.ps1
+scripts/diagnose-azure-subscription.ps1
+scripts/*-local.ps1
+scripts/*-dev.ps1
